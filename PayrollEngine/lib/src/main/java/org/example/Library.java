@@ -3,12 +3,18 @@
  */
 package org.example;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.example.Core.LangParser;
 import org.example.Core.Lexer;
 import org.example.Core.Token;
+import org.example.Expression.AssignExpression;
 import org.example.Expression.Expression;
+import org.example.Graph.ComponentNode;
+import org.example.Graph.GraphBuilderVisitor;
 
 public class Library {
   Lexer lexer;
@@ -28,5 +34,40 @@ public class Library {
     StringBuilder sb = new StringBuilder();
     expression.print(sb);
     return sb.toString();
+  }
+
+  public List<Expression> runParser(String input) {
+
+    String[] i = input.split("\n");
+    List<Expression> expressions = new ArrayList<>();
+    for (String line : i) {
+      Lexer lexer = new Lexer(line);
+      Expression exprs = new LangParser(lexer).parseExpression();
+      expressions.add(exprs);
+    }
+
+    return expressions;
+  }
+
+  public GraphBuilderVisitor run() {
+    List<Expression> expressions = runParser(input);
+
+    Map<String, ComponentNode> nodes = new HashMap<>();
+    for (Expression expr : expressions) {
+      AssignExpression assignExpression = (AssignExpression) expr;
+
+      ComponentNode node = nodes.get(assignExpression.getName().getName());
+
+      nodes.put(assignExpression.getName().getName(), node);
+    }
+
+    GraphBuilderVisitor graphBuilderVisitor = new GraphBuilderVisitor(nodes);
+    // return expressions;
+    for (ComponentNode node : nodes.values()) {
+      graphBuilderVisitor.setCurrent(node);
+      node.getExpression().accept(graphBuilderVisitor);
+    }
+
+    return graphBuilderVisitor;
   }
 }

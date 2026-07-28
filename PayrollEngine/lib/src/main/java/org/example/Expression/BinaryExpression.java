@@ -1,5 +1,6 @@
 package org.example.Expression;
 
+import org.example.Graph.Visitor;
 import org.example.Utils.TokenType;
 
 public class BinaryExpression implements Expression {
@@ -23,4 +24,19 @@ public class BinaryExpression implements Expression {
     sb.append(")");
   }
 
+  public <R> R accept(Visitor<R> visitor) {
+    return visitor.visitBinaryExpression(this);
+  }
+
+  public Expression getLeft() {
+    return left;
+  }
+
+  public TokenType getOperator() {
+    return operator;
+  }
+
+  public Expression getRight() {
+    return right;
+  }
 }

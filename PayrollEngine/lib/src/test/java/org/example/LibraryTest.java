@@ -6,9 +6,16 @@ package org.example;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.example.Core.Token;
+import org.example.Expression.AssignExpression;
+import org.example.Expression.Expression;
+import org.example.Graph.GraphBuilderVisitor;
 import org.example.Utils.TokenType;
+import org.example.Graph.ComponentNode;
 
 public class LibraryTest {
   @Test
@@ -98,5 +105,46 @@ public class LibraryTest {
     String res = classUnderTest.runParser();
     String expected = "(= BASIC (* HRA 2))";
     assertEquals(expected, res);
+  }
+
+  @Test
+  public void parseTest() {
+    String input = "BASIC = HRA * 2\nHRA = PF * 4";
+    Library classUnderTest = new Library(input);
+
+    List<Expression> expr = classUnderTest.runParser(input);
+
+    Map<String, ComponentNode> components = new HashMap<>();
+
+    for (Expression e : expr) {
+      AssignExpression assignExpression = (AssignExpression) e;
+
+      ComponentNode node = new ComponentNode(assignExpression.getName().getName(), assignExpression);
+      System.out.println(node.getName());
+
+      components.put(assignExpression.getName().getName(), node);
+    }
+
+    GraphBuilderVisitor graphBuilderVisitor = new GraphBuilderVisitor(components);
+
+    for (ComponentNode node : components.values()) {
+      graphBuilderVisitor.setCurrent(node);
+      node.getExpression().accept(graphBuilderVisitor);
+    }
+
+    for (ComponentNode node : components.values()) {
+      System.out.print(node.getName() + " depends on: ");
+
+      System.out.println("Dependencies: " + node.getDependencies().size());
+      for (ComponentNode dep : node.getDependencies()) {
+        System.out.print(dep.getName() + " is the dependency\n");
+      }
+
+      System.out.println();
+    }
+
+    // for (Expression e : expr) {
+    // System.out.println(e.getClass());
+    // }
   }
 }

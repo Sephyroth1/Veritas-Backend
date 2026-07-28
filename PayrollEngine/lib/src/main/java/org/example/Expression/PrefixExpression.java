@@ -1,5 +1,6 @@
 package org.example.Expression;
 
+import org.example.Graph.Visitor;
 import org.example.Utils.TokenType;
 
 public class PrefixExpression implements Expression {
@@ -17,5 +18,13 @@ public class PrefixExpression implements Expression {
     sb.append(" ");
     right.print(sb);
     sb.append(")");
+  }
+
+  public <R> R accept(Visitor<R> visitor) {
+    return visitor.visitPreFixExpression(this);
+  }
+
+  public Expression getRight() {
+    return right;
   }
 }

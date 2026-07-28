@@ -1,5 +1,6 @@
 package org.example.Expression;
 
+import org.example.Graph.Visitor;
 import org.example.Utils.TokenType;
 
 public class PostfixExpression implements Expression {
@@ -19,4 +20,11 @@ public class PostfixExpression implements Expression {
     sb.append(")");
   }
 
+  public <R> R accept(Visitor<R> visitor) {
+    return visitor.visitPostFixExpression(this);
+  }
+
+  public Expression getLeft() {
+    return left;
+  }
 }

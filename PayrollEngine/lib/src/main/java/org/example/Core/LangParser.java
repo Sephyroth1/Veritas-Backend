@@ -7,6 +7,7 @@ import org.example.Parselets.PostfixOperatorParselet;
 import org.example.Parselets.InfixParselet;
 import org.example.Parselets.NumberParselet;
 import org.example.Parselets.NameParselet;
+import org.example.Parselets.AssignParselet;
 
 public class LangParser extends Parser {
   public LangParser(Lexer lex) {
@@ -29,7 +30,11 @@ public class LangParser extends Parser {
     infixLeft(TokenType.EGT, Precedence.COMPARISON);
     infixLeft(TokenType.LT, Precedence.COMPARISON);
     infixLeft(TokenType.GT, Precedence.COMPARISON);
-    infixRight(TokenType.EQUAL, Precedence.ASSIGNMENT);
+    assign(TokenType.EQUAL, Precedence.ASSIGNMENT);
+  }
+
+  public void assign(TokenType token, int precedence) {
+    register(token, new AssignParselet());
   }
 
   public void postfix(TokenType token, int precedence) {
