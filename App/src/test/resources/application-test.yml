@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/veritas_test
+    username: postgres
+    password: admin
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+security:
+  jwt:
+    secret-key: znUUo5DA15D0nPyiEYCT2zqnyD8oj2PzoHIwregaTJG
+    expiration: 3600000
