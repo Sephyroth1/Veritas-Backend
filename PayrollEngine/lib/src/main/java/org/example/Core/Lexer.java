@@ -19,11 +19,23 @@ public class Lexer {
       StringBuilder sb = new StringBuilder();
       if (Character.isDigit(stream.peek())) {
         sb.setLength(0);
-        while (!stream.isAtEnd() && Character.isDigit(stream.peek())) {
-          sb.append(stream.peek());
+        StringBuilder sb2 = new StringBuilder();
+        boolean isDouble = false;
+        while (!stream.isAtEnd() && Character.isDigit(stream.peek()) || stream.peek() == '.') {
+          if (isDouble || stream.peek() == '.') {
+            isDouble = true;
+            sb2.append(stream.peek());
+          } else {
+            sb.append(stream.peek());
+          }
           stream.advance();
         }
-        tokens.add(new Token(TokenType.NUMBER, sb.toString()));
+        if (isDouble && sb2.length() > 0) {
+          isDouble = false;
+          tokens.add(new Token(TokenType.DOUBLE, sb.toString() + sb2.toString()));
+        } else {
+          tokens.add(new Token(TokenType.NUMBER, sb.toString()));
+        }
       } else if (Character.isLetter(stream.peek())) {
         sb.setLength(0);
         while (!stream.isAtEnd() && Character.isLetter(stream.peek())) {

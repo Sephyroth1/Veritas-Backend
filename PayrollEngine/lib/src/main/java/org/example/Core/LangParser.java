@@ -15,6 +15,7 @@ public class LangParser extends Parser {
 
     register(TokenType.IDENT, new NameParselet());
     register(TokenType.NUMBER, new NumberParselet());
+    register(TokenType.DOUBLE, new NumberParselet());
 
     prefix(TokenType.ADD, Precedence.PREFIX);
     prefix(TokenType.SUB, Precedence.PREFIX);

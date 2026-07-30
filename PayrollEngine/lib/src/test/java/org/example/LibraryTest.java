@@ -115,7 +115,7 @@ public class LibraryTest {
   @Test
   public void parseTest() {
     // String input = "BASIC = HRA * 2\nHRA = PF * 4";
-    String input = "A = -5\nB = 5\nC = A + B";
+    String input = "A = 5.0\nB = 12.574\nC = A + B";
     Library classUnderTest = new Library(input);
 
     List<Expression> expr = classUnderTest.runParser(input);

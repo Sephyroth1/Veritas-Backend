@@ -15,6 +15,7 @@ public enum TokenType {
   ELT,
   EE,
   EQUAL, NUMBER,
+  DOUBLE,
   EOF,
   IDENT;
 
@@ -54,6 +55,8 @@ public enum TokenType {
         return "NUMBER";
       case IDENT:
         return "IDENT";
+      case DOUBLE:
+        return "DOUBLE";
       default:
         throw new IllegalArgumentException("Token Type doesn't have a fixed String representation of this type" + this);
     }
