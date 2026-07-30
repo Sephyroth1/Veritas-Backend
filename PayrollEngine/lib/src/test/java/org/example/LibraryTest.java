@@ -6,9 +6,12 @@ package org.example;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.example.Core.Token;
 import org.example.Expression.AssignExpression;
@@ -16,6 +19,8 @@ import org.example.Expression.Expression;
 import org.example.Graph.GraphBuilderVisitor;
 import org.example.Utils.TokenType;
 import org.example.Graph.ComponentNode;
+import org.example.Graph.CycleDetection;
+import org.example.Graph.Evaluator;
 
 public class LibraryTest {
   @Test
@@ -109,13 +114,15 @@ public class LibraryTest {
 
   @Test
   public void parseTest() {
-    String input = "BASIC = HRA * 2\nHRA = PF * 4";
+    // String input = "BASIC = HRA * 2\nHRA = PF * 4";
+    String input = "A = -5\nB = 5\nC = A + B";
     Library classUnderTest = new Library(input);
 
     List<Expression> expr = classUnderTest.runParser(input);
 
     Map<String, ComponentNode> components = new HashMap<>();
 
+    System.out.println("Number of nodes: " + expr.size());
     for (Expression e : expr) {
       AssignExpression assignExpression = (AssignExpression) e;
 
@@ -125,6 +132,7 @@ public class LibraryTest {
       components.put(assignExpression.getName().getName(), node);
     }
 
+    System.out.println();
     GraphBuilderVisitor graphBuilderVisitor = new GraphBuilderVisitor(components);
 
     for (ComponentNode node : components.values()) {
@@ -133,18 +141,46 @@ public class LibraryTest {
     }
 
     for (ComponentNode node : components.values()) {
-      System.out.print(node.getName() + " depends on: ");
+      System.out.println(node.getName() + " : ");
 
-      System.out.println("Dependencies: " + node.getDependencies().size());
-      for (ComponentNode dep : node.getDependencies()) {
-        System.out.print(dep.getName() + " is the dependency\n");
+      System.out.println("Dependencies are : ");
+      if (node.getDependencies().size() == 0) {
+        System.out.println("None");
+      } else {
+        for (ComponentNode dep : node.getDependencies()) {
+          System.out.print(dep.getName() + " ,");
+        }
+        System.out.println();
       }
 
+      System.out.println("Dependents: ");
+      if (node.getDependents().size() == 0) {
+        System.out.println("None");
+      } else {
+        for (ComponentNode dep : node.getDependents()) {
+          System.out.print(dep.getName() + " ,");
+        }
+        System.out.println();
+      }
       System.out.println();
     }
 
-    // for (Expression e : expr) {
-    // System.out.println(e.getClass());
-    // }
+    List<ComponentNode> sorted = CycleDetection.topologicalSort(components);
+
+    System.out.println("Topological sort: ");
+
+    Map<String, BigDecimal> values = new HashMap<>();
+
+    Evaluator evaluator = new Evaluator(values);
+
+    for (ComponentNode node : sorted) {
+      BigDecimal value = node.getExpression().accept(evaluator);
+      values.put(node.getName(), value);
+    }
+
+    System.out.println("Evaluator Map : ");
+    for (Entry<String, BigDecimal> entry : values.entrySet()) {
+      System.out.println(entry.getKey() + " : " + entry.getValue());
+    }
   }
 }

@@ -27,4 +27,8 @@ public class PrefixExpression implements Expression {
   public Expression getRight() {
     return right;
   }
+
+  public TokenType getOperator() {
+    return operator;
+  }
 }
