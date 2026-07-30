@@ -34,12 +34,7 @@ public class Parser {
   }
 
   public boolean match(TokenType type) {
-    if (!isAtEnd()) {
-      if (prefixParselets.containsKey(type) || infixParselets.containsKey(type)) {
-        return true;
-      }
-    }
-    return false;
+    return !isAtEnd() && peek().type() == type;
   }
 
   public void register(TokenType type, PrefixParselet parselet) {
@@ -73,7 +68,7 @@ public class Parser {
 
     Expression left = prefixParselet.parse(this, token);
 
-    while (precedence < getPrecedence(peek().type())) {
+    while (!isAtEnd() && precedence < getPrecedence(peek().type())) {
       InfixParselet infix = infixParselets.get(peek().type());
       left = infix.parse(this, consume(), left);
     }

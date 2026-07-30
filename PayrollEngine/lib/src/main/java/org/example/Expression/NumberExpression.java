@@ -1,11 +1,13 @@
 package org.example.Expression;
 
+import java.math.BigDecimal;
+
 import org.example.Graph.Visitor;
 
 public class NumberExpression implements Expression {
-  private int value;
+  private BigDecimal value;
 
-  public NumberExpression(int value) {
+  public NumberExpression(BigDecimal value) {
     this.value = value;
   }
 
@@ -17,7 +19,7 @@ public class NumberExpression implements Expression {
     return visitor.visitNumberExpression(this);
   }
 
-  public int getValue() {
+  public BigDecimal getValue() {
     return value;
   }
 }
