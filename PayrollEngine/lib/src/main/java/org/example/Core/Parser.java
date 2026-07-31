@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.example.CompilerException.ParserException;
 import org.example.Expression.Expression;
 import org.example.Parselets.InfixParselet;
 import org.example.Parselets.PrefixParselet;
@@ -26,7 +27,7 @@ public class Parser {
     if (!isAtEnd()) {
       return this.tokens.get(this.index++);
     }
-    throw new RuntimeException("Unexpected end of input");
+    throw new ParserException("Unexpected end of input");
   }
 
   public boolean isAtEnd() {
@@ -48,7 +49,7 @@ public class Parser {
   public Token consume(TokenType type) {
     if (!match(type)) {
 
-      throw new RuntimeException("Expected " + type.stringify() + " but got " + tokens.get(index).type().stringify());
+      throw new ParserException("Expected " + type.stringify() + " but got " + tokens.get(index).type().stringify());
     }
 
     return consume();
@@ -63,7 +64,7 @@ public class Parser {
     PrefixParselet prefixParselet = prefixParselets.get(token.type());
 
     if (prefixParselet == null) {
-      throw new RuntimeException("No prefix parselet for " + token.type().stringify());
+      throw new ParserException("No prefix parselet for " + token.type().stringify());
     }
 
     Expression left = prefixParselet.parse(this, token);

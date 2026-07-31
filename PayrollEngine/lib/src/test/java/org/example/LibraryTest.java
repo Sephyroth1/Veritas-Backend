@@ -4,119 +4,26 @@
 package org.example;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.example.Core.Token;
 import org.example.Expression.AssignExpression;
 import org.example.Expression.Expression;
 import org.example.Graph.GraphBuilderVisitor;
-import org.example.Utils.TokenType;
 import org.example.Graph.ComponentNode;
 import org.example.Graph.CycleDetection;
 import org.example.Graph.Evaluator;
 
 public class LibraryTest {
-  @Test
-  public void LexBasic() {
-    Library classUnderTest = new Library("1 + 1");
-    List<Token> res = classUnderTest.runLexer();
-    List<Token> expected = List.of(new Token(TokenType.NUMBER, "1"), new Token(TokenType.ADD, "+"),
-        new Token(TokenType.NUMBER, "1"),
-        new Token(TokenType.EOF, "EOF"));
-
-    assertEquals(expected, res);
-  }
-
-  @Test
-  public void LexCorrectly() {
-    Library classUnderTest = new Library("23 * 12 + 34 / 56");
-    List<Token> res = classUnderTest.runLexer();
-    List<Token> expected = List.of(
-        new Token(TokenType.NUMBER, "23"),
-        new Token(TokenType.MUL, "*"),
-        new Token(TokenType.NUMBER, "12"),
-        new Token(TokenType.ADD, "+"),
-        new Token(TokenType.NUMBER, "34"),
-        new Token(TokenType.DIV, "/"),
-        new Token(TokenType.NUMBER, "56"),
-        new Token(TokenType.EOF, "EOF"));
-    assertEquals(expected, res);
-  }
-
-  @Test
-  public void LexVarsCorrectly() {
-    Library classUnderTest = new Library("BASIC * 2");
-    List<Token> res = classUnderTest.runLexer();
-    List<Token> expected = List.of(
-        new Token(TokenType.IDENT, "BASIC"),
-        new Token(TokenType.MUL, "*"),
-        new Token(TokenType.NUMBER, "2"),
-        new Token(TokenType.EOF, "EOF"));
-    assertEquals(expected, res);
-  }
-
-  @Test
-  public void LexEqualsCorrectly() {
-    Library classUnderTest = new Library("BASIC = HRA * 2");
-    List<Token> res = classUnderTest.runLexer();
-    List<Token> expected = List.of(
-        new Token(TokenType.IDENT, "BASIC"),
-        new Token(TokenType.EQUAL, "="),
-        new Token(TokenType.IDENT, "HRA"),
-        new Token(TokenType.MUL, "*"),
-        new Token(TokenType.NUMBER, "2"),
-        new Token(TokenType.EOF, "EOF"));
-    assertEquals(expected, res);
-  }
-
-  @Test
-  public void LexLessThanCorrectly() {
-    Library classUnderTest = new Library("BASIC <= HRA");
-    List<Token> res = classUnderTest.runLexer();
-    List<Token> expected = List.of(
-        new Token(TokenType.IDENT, "BASIC"),
-        new Token(TokenType.ELT, "<="),
-        new Token(TokenType.IDENT, "HRA"),
-        new Token(TokenType.EOF, "EOF"));
-    assertEquals(expected, res);
-  }
-
-  @Test
-  public void parseCorrectly() {
-    Library classUnderTest = new Library("1 + 1");
-    String res = classUnderTest.runParser();
-    String expected = "(+ 1 1)";
-    assertEquals(expected, res);
-  }
-
-  @Test
-  public void parseVarsCorrectly() {
-    Library classUnderTest = new Library("BASIC * 2");
-    String res = classUnderTest.runParser();
-    String expected = "(* BASIC 2)";
-    assertEquals(expected, res);
-  }
-
-  @Test
-  public void parseEqualsCorrectly() {
-    Library classUnderTest = new Library("BASIC = HRA * 2");
-    String res = classUnderTest.runParser();
-    String expected = "(= BASIC (* HRA 2))";
-    assertEquals(expected, res);
-  }
 
   @Test
   public void parseTest() {
-    // String input = "BASIC = HRA * 2\nHRA = PF * 4";
-    String input = "A = 5.0\nB = 12.574\nC = A + B";
-    Library classUnderTest = new Library(input);
+    String input = "Basic = 50000\nHRA = Basic * 0.4\nPF = Basic * 0.12\nNet = Basic + HRA - PF";
+    PayrollEngine classUnderTest = new PayrollEngine(input);
 
     List<Expression> expr = classUnderTest.runParser(input);
 

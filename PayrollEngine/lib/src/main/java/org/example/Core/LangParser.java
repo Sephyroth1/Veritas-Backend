@@ -4,7 +4,6 @@ import org.example.Utils.TokenType;
 import org.example.Parselets.BinaryOperatorParselet;
 import org.example.Parselets.PrefixOperatorParselet;
 import org.example.Parselets.PostfixOperatorParselet;
-import org.example.Parselets.InfixParselet;
 import org.example.Parselets.NumberParselet;
 import org.example.Parselets.NameParselet;
 import org.example.Parselets.AssignParselet;

@@ -3,6 +3,7 @@ package org.example.Graph;
 import java.math.BigDecimal;
 import java.util.Map;
 
+import org.example.CompilerException.EvaluationException;
 import org.example.Expression.AssignExpression;
 import org.example.Expression.BinaryExpression;
 import org.example.Expression.NameExpression;
@@ -31,18 +32,18 @@ public class Evaluator implements Visitor<BigDecimal> {
         return left.multiply(right);
       case TokenType.DIV:
         if (right.equals(BigDecimal.ZERO)) {
-          throw new RuntimeException("Division by zero");
+          throw new EvaluationException("Division by zero");
         }
         return left.divide(right);
       default:
-        throw new UnsupportedOperationException("Unsupported operator");
+        throw new EvaluationException("Unsupported operator");
     }
   }
 
   @Override
   public BigDecimal visitNameExpression(NameExpression node) {
     if (!values.containsKey(node.getName())) {
-      throw new RuntimeException("Undefined variable");
+      throw new EvaluationException("Undefined variable");
     }
 
     String var = node.getName();
@@ -67,8 +68,9 @@ public class Evaluator implements Visitor<BigDecimal> {
     switch (node.getOperator()) {
       case TokenType.SUB:
         return value.negate();
+      default:
+        return value;
     }
-    return value;
   }
 
   @Override

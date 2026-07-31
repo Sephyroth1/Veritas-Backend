@@ -2,6 +2,7 @@ package org.example.Graph;
 
 import java.util.Map;
 
+import org.example.CompilerException.SemanticException;
 import org.example.Expression.AssignExpression;
 import org.example.Expression.BinaryExpression;
 import org.example.Expression.Expression;
@@ -28,13 +29,13 @@ public class GraphBuilderVisitor implements Visitor<Void> {
   @Override
   public Void visitNameExpression(NameExpression node) {
     if (node == null) {
-      throw new RuntimeException("Name cannot be null");
+      throw new SemanticException("Name cannot be null");
     }
 
     ComponentNode node1 = nodes.get(node.getName());
 
     if (node1 == null) {
-      throw new RuntimeException("Name " + node.getName() + " not found");
+      throw new SemanticException("Name " + node.getName() + " not found");
     }
 
     current.addChild(node1);
@@ -45,11 +46,11 @@ public class GraphBuilderVisitor implements Visitor<Void> {
   @Override
   public Void visitAssignExpression(AssignExpression node) {
     if (node == null) {
-      throw new RuntimeException("Assign expression cannot be null");
+      throw new SemanticException("Assign expression cannot be null");
     }
     Expression left = node.getName();
     if (!(left instanceof NameExpression)) {
-      throw new RuntimeException("Left side of assignment must be a name");
+      throw new SemanticException("Left side of assignment must be a name");
     }
 
     current = nodes.get(node.getName().getName());
@@ -67,7 +68,7 @@ public class GraphBuilderVisitor implements Visitor<Void> {
   @Override
   public Void visitPreFixExpression(PrefixExpression node) {
     if (node == null) {
-      throw new RuntimeException("Prefix expression cannot be null");
+      throw new SemanticException("Prefix expression cannot be null");
     }
     node.getRight().accept(this);
     return null;

@@ -10,34 +10,21 @@ import java.util.Map;
 
 import org.example.Core.LangParser;
 import org.example.Core.Lexer;
-import org.example.Core.Token;
 import org.example.Expression.AssignExpression;
 import org.example.Expression.Expression;
 import org.example.Graph.ComponentNode;
 import org.example.Graph.GraphBuilderVisitor;
 
-public class Library {
+public class PayrollEngine {
   Lexer lexer;
   String input;
 
-  public Library(String input) {
+  public PayrollEngine(String input) {
     this.input = input;
     lexer = new Lexer(this.input);
   }
 
-  public List<Token> runLexer() {
-    return lexer.lex();
-  }
-
-  public String runParser() {
-    Expression expression = new LangParser(lexer).parseExpression();
-    StringBuilder sb = new StringBuilder();
-    expression.print(sb);
-    return sb.toString();
-  }
-
-  public List<Expression> runParser(String input) {
-
+  public List<Expression> runParser() {
     String[] i = input.split("\n");
     List<Expression> expressions = new ArrayList<>();
     for (String line : i) {
@@ -50,7 +37,7 @@ public class Library {
   }
 
   public GraphBuilderVisitor run() {
-    List<Expression> expressions = runParser(input);
+    List<Expression> expressions = runParser();
 
     Map<String, ComponentNode> nodes = new HashMap<>();
     for (Expression expr : expressions) {
