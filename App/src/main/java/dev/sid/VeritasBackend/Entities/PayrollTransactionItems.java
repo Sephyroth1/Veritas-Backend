@@ -21,6 +21,7 @@ public class PayrollTransactionItems {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
 
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "payroll_transaction_id", nullable = false)
   private PayrollTransactions payrollTransaction;
 
